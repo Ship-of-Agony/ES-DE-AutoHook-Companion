@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ES-DE AutoHook Companion</string>
+    <string name="service_description">Automatically launches the companion app on secondary display when ES-DE starts.</string>
+</resources>
