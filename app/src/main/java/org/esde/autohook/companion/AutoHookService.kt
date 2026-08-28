@@ -17,15 +17,6 @@ class AutoHookService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
-        // 1. Prüfen, ob der Hook über die Quick Settings Tile aktiv ist
-        val prefs = getSharedPreferences("autohook_prefs", Context.MODE_PRIVATE)
-        val isEnabled = prefs.getBoolean("is_enabled", true)
-        if (!isEnabled) {
-            isCompanionLaunched = false
-            return
-        }
-
-        // 2. Fensterwechsel überwachen
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val currentPkg = event.packageName?.toString() ?: return
 
@@ -33,7 +24,6 @@ class AutoHookService : AccessibilityService() {
                 isCompanionLaunched = true
                 launchCompanionOnSecondDisplay()
             } else if (currentPkg != esDePackage && currentPkg != companionPackage) {
-                // Zurücksetzen, wenn eine andere App (z.B. Launcher) im Vordergrund ist
                 isCompanionLaunched = false
             }
         }
@@ -43,9 +33,7 @@ class AutoHookService : AccessibilityService() {
         val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
         val displays = displayManager.displays
 
-        // Zweites Display ermitteln (falls vorhanden, sonst Fallback auf Standard)
         val mainDisplayId = Display.DEFAULT_DISPLAY
-        val targetDisplayId = if (displays.size > 1) {
             displays.firstOrNull { it.displayId != mainDisplayId }?.displayId ?: mainDisplayId
         } else {
             mainDisplayId
@@ -53,25 +41,14 @@ class AutoHookService : AccessibilityService() {
 
         val launchIntent = packageManager.getLaunchIntentForPackage(companionPackage)
         if (launchIntent != null) {
-            launchIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP
-            )
 
             val options = ActivityOptions.makeBasic()
-            options.launchDisplayId = targetDisplayId
 
             startActivity(launchIntent, options.toBundle())
         }
     }
 
     override fun onInterrupt() {
-        isCompanionLaunched = false
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
         isCompanionLaunched = false
     }
 }
