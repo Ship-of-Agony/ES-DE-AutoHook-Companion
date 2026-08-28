@@ -10,40 +10,46 @@ import android.view.accessibility.AccessibilityEvent
 
 class AutoHookService : AccessibilityService() {
 
-    private val esDePackage = "org.es_de.frontend"
-    private val companionPackage = "com.esde.companion"
     private var isCompanionLaunched = false
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
-        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            val currentPkg = event.packageName?.toString() ?: return
+        val prefs = getSharedPreferences("autohook_prefs", Context.MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("is_enabled", true)
+        if (!isEnabled) return
 
-            if (currentPkg == esDePackage && !isCompanionLaunched) {
-                isCompanionLaunched = true
-                launchCompanionOnSecondDisplay()
-            } else if (currentPkg != esDePackage && currentPkg != companionPackage) {
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            val packageName = event.packageName?.toString() ?: return
+
+            if (packageName == "org.es_de.frontend") {
+                if (!isCompanionLaunched) {
+                    launchCompanionOnSecondaryDisplay()
+                    isCompanionLaunched = true
+                }
+            } else if (packageName != "com.esde.companion") {
                 isCompanionLaunched = false
             }
         }
     }
 
-    private fun launchCompanionOnSecondDisplay() {
-        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+    private fun launchCompanionOnSecondaryDisplay() {
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager ?: return
         val displays = displayManager.displays
 
-        val mainDisplayId = Display.DEFAULT_DISPLAY
-            displays.firstOrNull { it.displayId != mainDisplayId }?.displayId ?: mainDisplayId
-        } else {
-            mainDisplayId
+        var targetDisplayId = Display.DEFAULT_DISPLAY
+        for (display in displays) {
+            if (display.displayId != Display.DEFAULT_DISPLAY) {
+                targetDisplayId = display.displayId
+                break
+            }
         }
 
-        val launchIntent = packageManager.getLaunchIntentForPackage(companionPackage)
+        val launchIntent = packageManager.getLaunchIntentForPackage("com.esde.companion")
         if (launchIntent != null) {
-
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
             val options = ActivityOptions.makeBasic()
-
+            options.launchDisplayId = targetDisplayId
             startActivity(launchIntent, options.toBundle())
         }
     }
