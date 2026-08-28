@@ -78,6 +78,8 @@ You can easily pause and resume the automatic companion launch without turning o
 * **Tap once:** Toggles between **`Auto-Launch`** (active) and **`Disabled`** (paused).
 * When disabled, ES-DE will open normally without triggering the secondary screen companion.
 
+  <img width="1974" height="853" alt="Quick Settings" src="https://github.com/user-attachments/assets/facf7b18-eecc-4d1a-a4b5-a6dcd2b37939" />
+
 ---
 
 ## 🗑️ Uninstallation
