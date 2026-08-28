@@ -5,7 +5,7 @@
     width="182" />
 </a>
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
 ![Android](https://img.shields.io/badge/Android-8%2B-green)
 
 
@@ -26,7 +26,8 @@ Whenever you launch **EmulationStation Desktop Edition (ES-DE)** on the primary 
 
 ## ⚡ Highlights
 
-* 👻 **Headless Operation:** Zero launcher icons, zero UI bloat, and zero clutter in your app drawer.
+* 👻 **Headless Operation:** Zero launcher icons and zero clutter in your home launcher while retaining full branding in system menus and Obtainium.
+* 🎛️ **Quick Settings Toggle:** Turn auto-launching ON or OFF at any time directly from your notification panel without diving into settings.
 * 🔋 **Ultra-Low Overhead:** Pure event-driven background service that only activates when ES-DE launches.
 * 🖥️ **Targeted Multi-Display Launching:** Uses Android's `DisplayManager` and `ActivityOptions` to explicitly assign the companion app to secondary framebuffers.
 * 🔄 **Clean State Management:** Automatically resets its launch trigger whenever you exit ES-DE.
@@ -37,7 +38,7 @@ Whenever you launch **EmulationStation Desktop Edition (ES-DE)** on the primary 
 
 | Target | Package Name | Role |
 | :--- | :--- | :--- |
-| **Frontend** | `org.es_de.frontend` | Main display launcher triggering the hook |
+| **ES-DE Frontend** | `org.es_de.frontend` | Main display launcher triggering the hook |
 | [**ES-DE Companion**](https://github.com/RobZombie9043/es-de-companion) | `com.esde.companion` | Secondary display companion app by RobZombie9043 |
 
 ---
@@ -45,22 +46,43 @@ Whenever you launch **EmulationStation Desktop Edition (ES-DE)** on the primary 
 ## 🚀 Installation & Setup
 
 ### 1. Install the APK
-Download the latest `app-release.apk` from the [Releases](https://github.com/Ship-of-Agony/ES-DE-AutoHook-Companion/releases) section and install it on your device.
+Download the latest `app-release.apk` from the [Releases](https://github.com/Ship-of-Agony/ES-DE-AutoHook-Companion/releases) section (or install/update directly via Obtainium).
 
-### 2. Enable Accessibility Service
-Because this app operates silently in the background, you must grant accessibility permissions once:
+### 2. Enable the Accessibility Service
+Because this app operates silently in the background, you must enable the accessibility service once:
 
 1. Open Android **Settings** ⚙️.
 2. Go to **Accessibility** (or **System → Accessibility**).
 3. Tap **Downloaded Services** (or **Installed Apps**).
 4. Select **ES-DE AutoHook Companion**.
-5. Toggle the service **ON** and accept the system prompt.
+5. Toggle the switch to **ON** and confirm the prompt.
+
+---
+
+## 🎛️ Quick Settings Tile (Quick Toggle)
+
+You can easily pause and resume the automatic companion launch without turning off the accessibility service:
+
+<p align="center">
+  <b>Active (Auto-Launch)</b> ↔️ <b>Inactive (Disabled)</b>
+</p>
+
+### How to add the Quick Settings Tile:
+1. Swipe down twice from the top of the screen to open the full **Quick Settings / Notification Panel**.
+2. Tap the **Edit / Pencil icon** ✏️ to customize your tiles.
+3. Scroll down to find the **AutoHook** tile.
+4. Drag and drop the **AutoHook** tile into your active quick settings area.
+5. Tap **Back** or exit edit mode.
+
+### Usage:
+* **Tap once:** Toggles between **`Auto-Launch`** (active) and **`Disabled`** (paused).
+* When disabled, ES-DE will open normally without triggering the secondary screen companion.
 
 ---
 
 ## 🗑️ Uninstallation
 
-Since **ES-DE AutoHook Companion** runs headlessly without an app icon in your launcher, uninstall it using one of the following methods:
+Since **ES-DE AutoHook Companion** runs headlessly without an app icon on your home screen, uninstall it using one of the following methods:
 
 ### Method 1: Android System Settings
 1. Open Android **Settings** ⚙️.
